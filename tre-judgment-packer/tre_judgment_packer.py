@@ -76,6 +76,8 @@ def handler(event, context):
 
     parent_execution_id = event[PROPERTIES][PARENT_EXECUTION_ID]
 
+    originator = event[PARAMETERS][ORIGINATOR]
+
     try:
 
         logger.info(
@@ -143,6 +145,8 @@ def handler(event, context):
                 "parentExecutionId": parent_execution_id,
             },
             "parameters": {
+                "reference": reference,
+                "originator": originator,
                 "bundleFileURI": s3_presigned_link,
                 "metadataFilePath": "/metadata.json",
                 "metadataFileType": "Json",
