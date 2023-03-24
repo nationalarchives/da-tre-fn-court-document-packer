@@ -138,7 +138,7 @@ def handler(event, context):
 
         event_output_success = {
             "properties": {
-                "messageType": "uk.gov.nationalarchives.tre.messages.packed.judgment.JudgmentPacked",
+                "messageType": "uk.gov.nationalarchives.tre.messages.judgmentpackage.available.JudgmentPackageAvailable",
                 "timestampMillis": timestamp_ns_utc,
                 "function": PROCESS,
                 "producer": PRODUCER,
