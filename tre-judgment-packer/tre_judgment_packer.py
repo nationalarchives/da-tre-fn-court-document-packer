@@ -5,7 +5,6 @@ import s3_lib.object_lib
 from s3_lib import tar_lib
 from s3_lib import common_lib
 import time
-from tre_event_lib import tre_event_api
 import uuid
 
 # Set global logging options; AWS environment may override this though
@@ -78,6 +77,14 @@ def handler(event, context):
 
     originator = event[PARAMETERS][ORIGINATOR]
 
+    # produce timestamp for message
+
+    timestamp_ns_utc = time.time_ns()
+
+    # produce UUID for message
+
+    event_uuid = str(uuid.uuid4())
+
     try:
 
         logger.info(
@@ -127,13 +134,7 @@ def handler(event, context):
             logging.error(e)
             return None
 
-        # produce timestamp for message
-
-        timestamp_ns_utc = time.time_ns()
-
-        # produce UUID for message
-
-        event_uuid = str(uuid.uuid4())
+        # event output not currently externally validated. This should be changed ASAP.
 
         event_output_success = {
             "properties": {
@@ -158,21 +159,24 @@ def handler(event, context):
 
     except ValueError as e:
         logging.error("handler error: %s", str(e))
-        output_parameter_block = {
-            EVENT_NAME_OUTPUT_ERROR: {
-                tre_event_api.KEY_REFERENCE: reference,
-                tre_event_api.KEY_ERRORS: [str(e)],
-            }
-        }
 
-        event_output_error = tre_event_api.create_event(
-            environment=ENVIRONMENT,
-            producer=PRODUCER,
-            process=PROCESS,
-            event_name=EVENT_NAME_OUTPUT_ERROR,
-            prior_event=event,
-            parameters=output_parameter_block,
-        )
+        # generic error message
+
+        event_output_error = {
+            "properties": {
+                "messageType": "uk.gov.nationalarchives.tre.messages.Error",
+                "timestampMillis": timestamp_ns_utc,
+                "function": PROCESS,
+                "producer": PRODUCER,
+                "executionId": event_uuid,
+                "parentExecutionId": parent_execution_id,
+            },
+            "parameters": {
+                "reference": reference,
+                "originator": originator,
+                "errors": str(e),
+            },
+        }
 
         logger.info(f"event_output_error:\n%s\n", event_output_error)
         return event_output_error
