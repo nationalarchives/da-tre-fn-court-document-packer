@@ -95,7 +95,7 @@ def handler(event, context):
         # Create a list of items to be zipped
 
         files_to_zip = s3_lib.object_lib.s3_ls(
-            bucket_name=SOURCE_BUCKET_NAME, object_filter=f"{parsed_judgment_file_path}"
+            bucket_name=s3_source_bucket, object_filter=f"{parsed_judgment_file_path}"
         )
 
         # create a name for the package based on consigment reference
