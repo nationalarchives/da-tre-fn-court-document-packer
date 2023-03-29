@@ -98,9 +98,17 @@ def handler(event, context):
             bucket_name=s3_source_bucket, object_filter=f"{parsed_judgment_file_path}"
         )
 
-        # create a name for the package based on consigment reference
+        # construct file path
+
+        s3_key_file_path = f"{reference}/{event_uuid}/"
+
+        # create a name for the package based on consignment reference
 
         packed_judgment_file_name = f"{reference}.tar.gz"
+
+        # s3 object key with name
+
+        s3_file_path_with_file_name = f"{s3_key_file_path}{packed_judgment_file_name}"
 
         # tar all the objects up into the package.
 
@@ -111,7 +119,7 @@ def handler(event, context):
         s3_lib.tar_lib.s3_objects_to_s3_tar_gz_file(
             s3_bucket_in=s3_source_bucket,
             s3_object_names=files_to_zip,
-            tar_gz_object=packed_judgment_file_name,
+            tar_gz_object=s3_file_path_with_file_name,
             s3_bucket_out=OUT_BUCKET,
         )
 
@@ -128,7 +136,7 @@ def handler(event, context):
                 ExpiresIn=URL_EXPIRY,
             )
             logger.info(
-                f"packed file link generated for {packed_judgment_file_name} in {OUT_BUCKET}"
+                f"packed file link generated for {packed_judgment_file_name} in {s3_key_file_path} folder in {OUT_BUCKET} bucket"
             )
         except ClientError as e:
             logging.error(e)
