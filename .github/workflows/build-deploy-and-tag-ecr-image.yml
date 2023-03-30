@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - 'main'
+  # Enable manual run; must be in main branch to be available
+  workflow_dispatch:
+jobs:
+  ecr-deploy:
+    uses: nationalarchives/tre-github-actions/.github/workflows/docker-build-and-ecr-deploy.yml@0.0.5
+    with:
+      docker_image_name: 'tre-judgment-packer'
+      build_dir: 'tre-judgment-packer'
+      ecr_registry_path: 'tre-v2'
+    secrets:
+      AWS_OPEN_ID_CONNECT_ROLE_ARN: ${{ secrets.AWS_OPEN_ID_CONNECT_ROLE_ARN }}
+      AWS_CODEARTIFACT_REPOSITORY_NAME: ${{ secrets.AWS_CODEARTIFACT_REPOSITORY_NAME }}
+      AWS_CODEARTIFACT_REPOSITORY_DOMAIN: ${{ secrets.AWS_CODEARTIFACT_REPOSITORY_DOMAIN }}
+      AWS_CODEARTIFACT_REPOSITORY_ACCOUNT: ${{ secrets.AWS_CODEARTIFACT_REPOSITORY_ACCOUNT }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
