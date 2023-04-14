@@ -77,7 +77,7 @@ def handler(event, context):
     status = event[PARAMETERS][STATUS]
 
     # produce timestamp for message
-    timestamp = datetime.now()
+    timestamp = datetime.now().isoformat() + 'Z'
 
     try:
 
