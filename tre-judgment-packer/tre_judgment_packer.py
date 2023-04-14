@@ -120,7 +120,7 @@ def handler(event, context):
                 "get_object",
                 Params={
                     "Bucket": OUT_BUCKET,
-                    "Key": packed_judgment_file_name,
+                    "Key": s3_file_path_with_file_name,
                 },
                 ExpiresIn=URL_EXPIRY,
             )
