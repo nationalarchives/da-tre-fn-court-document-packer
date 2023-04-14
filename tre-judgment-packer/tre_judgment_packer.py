@@ -4,8 +4,8 @@ from botocore.exceptions import ClientError
 import s3_lib.object_lib
 from s3_lib import tar_lib
 from s3_lib import common_lib
-import time
-import uuid
+from datetime import datetime
+
 
 # Set global logging options; AWS environment may override this though
 logging.basicConfig(
@@ -37,7 +37,9 @@ URL_EXPIRY = common_lib.get_env_var(
 
 KEY_S3_OBJECT_ROOT = "s3FolderName"
 ORIGINATOR = "originator"
+STATUS = "status"
 PARAMETERS = "parameters"
+EXECUTION_ID = "executionId"
 PARENT_EXECUTION_ID = "parentExecutionId"
 PARSED_JUDGMENT_FILE_PATH = "s3FolderName"
 PROPERTIES = "properties"
@@ -66,24 +68,16 @@ def handler(event, context):
     logger.info(f'handler start: event="{event}"')
 
     # Grabbing parameters from source event message.
-
     s3_source_bucket = event[PARAMETERS][SOURCE_BUCKET_NAME]
-
     reference = event[PARAMETERS][REFERENCE]
-
     parsed_judgment_file_path = event[PARAMETERS][KEY_S3_OBJECT_ROOT]
-
+    execution_id = event[PROPERTIES][EXECUTION_ID]
     parent_execution_id = event[PROPERTIES][PARENT_EXECUTION_ID]
-
     originator = event[PARAMETERS][ORIGINATOR]
+    status = event[PARAMETERS][STATUS]
 
     # produce timestamp for message
-
-    timestamp_ns_utc = time.time_ns()
-
-    # produce UUID for message
-
-    event_uuid = str(uuid.uuid4())
+    timestamp = datetime.now()
 
     try:
 
@@ -99,15 +93,10 @@ def handler(event, context):
         )
 
         # construct file path
-
-        s3_key_file_path = f"{reference}/{event_uuid}/"
-
-        # create a name for the package based on consignment reference
-
+        s3_key_file_path = f"{reference}/{execution_id}/"
+        # create a name for the package based on reference
         packed_judgment_file_name = f"{reference}.tar.gz"
-
         # s3 object key with name
-
         s3_file_path_with_file_name = f"{s3_key_file_path}{packed_judgment_file_name}"
 
         # tar all the objects up into the package.
@@ -147,13 +136,14 @@ def handler(event, context):
         event_output_success = {
             "properties": {
                 "messageType": "uk.gov.nationalarchives.tre.messages.judgmentpackage.available.JudgmentPackageAvailable",
-                "timestampMillis": timestamp_ns_utc,
+                "timestamp": timestamp,
                 "function": PROCESS,
                 "producer": PRODUCER,
-                "executionId": event_uuid,
+                "executionId": execution_id,
                 "parentExecutionId": parent_execution_id,
             },
             "parameters": {
+                "status": status,
                 "reference": reference,
                 "originator": originator,
                 "bundleFileURI": s3_presigned_link,
@@ -173,10 +163,10 @@ def handler(event, context):
         event_output_error = {
             "properties": {
                 "messageType": "uk.gov.nationalarchives.tre.messages.Error",
-                "timestampMillis": timestamp_ns_utc,
+                "timestamp": timestamp,
                 "function": PROCESS,
                 "producer": PRODUCER,
-                "executionId": event_uuid,
+                "executionId": execution_id,
                 "parentExecutionId": parent_execution_id,
             },
             "parameters": {
