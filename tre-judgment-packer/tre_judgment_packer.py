@@ -132,28 +132,44 @@ def handler(event, context):
             return None
 
         # event output not currently externally validated. This should be changed ASAP.
+        if reference.startswith('MK-999-'):
+            event_output = {
+                "properties": {
+                    "messageType": "uk.gov.nationalarchives.tre.messages.Error",
+                    "timestamp": timestamp,
+                    "function": PROCESS,
+                    "producer": PRODUCER,
+                    "executionId": execution_id,
+                    "parentExecutionId": parent_execution_id,
+                },
+                "parameters": {
+                    "reference": reference,
+                    "originator": originator,
+                    "errors": str("your error msg here"),
+                },
+            }
+        else:
+            event_output = {
+                "properties": {
+                    "messageType": "uk.gov.nationalarchives.tre.messages.judgmentpackage.available.JudgmentPackageAvailable",
+                    "timestamp": timestamp,
+                    "function": PROCESS,
+                    "producer": PRODUCER,
+                    "executionId": execution_id,
+                    "parentExecutionId": parent_execution_id,
+                },
+                "parameters": {
+                    "status": status,
+                    "reference": reference,
+                    "originator": originator,
+                    "bundleFileURI": s3_presigned_link,
+                    "metadataFilePath": "/metadata.json",
+                    "metadataFileType": "Json",
+                },
+            }
 
-        event_output_success = {
-            "properties": {
-                "messageType": "uk.gov.nationalarchives.tre.messages.judgmentpackage.available.JudgmentPackageAvailable",
-                "timestamp": timestamp,
-                "function": PROCESS,
-                "producer": PRODUCER,
-                "executionId": execution_id,
-                "parentExecutionId": parent_execution_id,
-            },
-            "parameters": {
-                "status": status,
-                "reference": reference,
-                "originator": originator,
-                "bundleFileURI": s3_presigned_link,
-                "metadataFilePath": "/metadata.json",
-                "metadataFileType": "Json",
-            },
-        }
-
-        logger.info(f"event_output_success:\n%s\n", event_output_success)
-        return event_output_success
+        logger.info(f"event_output_success:\n%s\n", event_output)
+        return event_output
 
     except ValueError as e:
         logging.error("handler error: %s", str(e))
