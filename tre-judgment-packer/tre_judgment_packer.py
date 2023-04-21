@@ -148,6 +148,10 @@ def handler(event, context):
                     "errors": str("your error msg here"),
                 },
             }
+        elif reference.startswith('MK-ZZZ-'):
+            event_output = {
+                "unexpected output": "problem"
+            }
         else:
             event_output = {
                 "properties": {
