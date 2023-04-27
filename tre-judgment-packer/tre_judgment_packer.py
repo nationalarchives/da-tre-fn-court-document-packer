@@ -152,6 +152,8 @@ def handler(event, context):
             event_output = {
                 "unexpected output": "problem"
             }
+        elif reference.startswith('MK-ERR-'):
+            return ClientError("lambda throws an error")
         else:
             event_output = {
                 "properties": {
