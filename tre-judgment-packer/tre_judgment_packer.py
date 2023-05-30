@@ -112,30 +112,10 @@ def handler(event, context):
             s3_bucket_out=OUT_BUCKET,
         )
 
-        # Generate pre-signed URL
-        s3 = boto3.client("s3")
-
-        try:
-            s3_presigned_link = s3.generate_presigned_url(
-                "get_object",
-                Params={
-                    "Bucket": OUT_BUCKET,
-                    "Key": s3_file_path_with_file_name,
-                },
-                ExpiresIn=URL_EXPIRY,
-            )
-            logger.info(
-                f"packed file link generated for {packed_judgment_file_name} in {s3_key_file_path} folder in {OUT_BUCKET} bucket"
-            )
-        except ClientError as e:
-            logging.error(e)
-            return None
-
-        # event output not currently externally validated. This should be changed ASAP.
 
         event_output_success = {
             "properties": {
-                "messageType": "uk.gov.nationalarchives.tre.messages.judgmentpackage.available.JudgmentPackageAvailable",
+                "messageType": "uk.gov.nationalarchives.tre.messages.courtdocumentpackage.available.CourtDocumentPackageAvailable",
                 "timestamp": timestamp,
                 "function": PROCESS,
                 "producer": PRODUCER,
@@ -146,7 +126,8 @@ def handler(event, context):
                 "status": status,
                 "reference": reference,
                 "originator": originator,
-                "bundleFileURI": s3_presigned_link,
+                "s3Bucket" : OUT_BUCKET,
+                "s3Key" : s3_file_path_with_file_name,
                 "metadataFilePath": "/metadata.json",
                 "metadataFileType": "Json",
             },
