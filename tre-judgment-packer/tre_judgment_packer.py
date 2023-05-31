@@ -6,7 +6,6 @@ from s3_lib import tar_lib
 from s3_lib import common_lib
 from datetime import datetime
 
-
 # Set global logging options; AWS environment may override this though
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -21,16 +20,13 @@ ENVIRONMENT = common_lib.get_env_var(
     "TRE_ENVIRONMENT", must_exist=True, must_have_value=True
 )
 OUT_BUCKET = common_lib.get_env_var(
-    "TRE_S3_JUDGMENT_OUT_BUCKET", must_exist=True, must_have_value=True
+    "TRE_S3_COURT_DOCUMENT_PACKED_OUT_BUCKET", must_exist=True, must_have_value=True
 )
 PROCESS = common_lib.get_env_var(
     "TRE_PROCESS_NAME", must_exist=True, must_have_value=True
 )
 PRODUCER = common_lib.get_env_var(
     "TRE_SYSTEM_NAME", must_exist=True, must_have_value=True
-)
-URL_EXPIRY = common_lib.get_env_var(
-    "TRE_PRESIGNED_URL_EXPIRY", must_exist=True, must_have_value=True
 )
 
 # Message in Vars
@@ -45,18 +41,6 @@ PARSED_JUDGMENT_FILE_PATH = "s3FolderName"
 PROPERTIES = "properties"
 REFERENCE = "reference"
 SOURCE_BUCKET_NAME = "s3Bucket"
-
-# Message out Vars
-
-KEY_S3_FOLDER_URL = "bundleFileURI"
-META_DATA_FILE_PATH = "metadataFilePath"
-META_DATA_FILE_TYPE = "metadataFileType"
-
-# Lambda vars
-
-EVENT_NAME_INPUT = "tre-judgment-parsed"
-EVENT_NAME_OUTPUT_OK = "tre-judgment-package-available"
-EVENT_NAME_OUTPUT_ERROR = "packed-judgment-error"
 
 
 def handler(event, context):
@@ -112,7 +96,6 @@ def handler(event, context):
             s3_bucket_out=OUT_BUCKET,
         )
 
-
         event_output_success = {
             "properties": {
                 "messageType": "uk.gov.nationalarchives.tre.messages.courtdocumentpackage.available.CourtDocumentPackageAvailable",
@@ -126,8 +109,8 @@ def handler(event, context):
                 "status": status,
                 "reference": reference,
                 "originator": originator,
-                "s3Bucket" : OUT_BUCKET,
-                "s3Key" : s3_file_path_with_file_name,
+                "s3Bucket": OUT_BUCKET,
+                "s3Key": s3_file_path_with_file_name,
                 "metadataFilePath": "/metadata.json",
                 "metadataFileType": "Json",
             },
