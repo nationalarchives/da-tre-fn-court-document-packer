@@ -20,7 +20,7 @@ ENVIRONMENT = common_lib.get_env_var(
     "TRE_ENVIRONMENT", must_exist=True, must_have_value=True
 )
 OUT_BUCKET = common_lib.get_env_var(
-    "TRE_S3_COURT_DOCUMENT_PACKED_OUT_BUCKET", must_exist=True, must_have_value=True
+    "TRE_S3_COURT_DOCUMENT_PACK_OUT_BUCKET", must_exist=True, must_have_value=True
 )
 PROCESS = common_lib.get_env_var(
     "TRE_PROCESS_NAME", must_exist=True, must_have_value=True
