@@ -57,7 +57,6 @@ def handler(event, context):
     parsed_judgment_file_path = event[PARAMETERS][KEY_S3_OBJECT_ROOT]
     execution_id = event[PROPERTIES][EXECUTION_ID]
     parent_execution_id = event[PROPERTIES][PARENT_EXECUTION_ID]
-    originator = event[PARAMETERS][ORIGINATOR]
     status = event[PARAMETERS][STATUS]
 
     # produce timestamp for message
@@ -108,13 +107,15 @@ def handler(event, context):
             "parameters": {
                 "status": status,
                 "reference": reference,
-                "originator": originator,
                 "s3Bucket": OUT_BUCKET,
                 "s3Key": s3_file_path_with_file_name,
                 "metadataFilePath": "/metadata.json",
                 "metadataFileType": "Json",
             },
         }
+
+        if ORIGINATOR in event[PARAMETERS]:
+            event_output_success[PARAMETERS][ORIGINATOR] = event[PARAMETERS][ORIGINATOR]
 
         logger.info(f"event_output_success:\n%s\n", event_output_success)
         return event_output_success
@@ -135,10 +136,12 @@ def handler(event, context):
             },
             "parameters": {
                 "reference": reference,
-                "originator": originator,
                 "errors": str(e),
             },
         }
+
+        if ORIGINATOR in event[PARAMETERS]:
+            event_output_error[PARAMETERS][ORIGINATOR] = event[PARAMETERS][ORIGINATOR]
 
         logger.info(f"event_output_error:\n%s\n", event_output_error)
         return event_output_error
