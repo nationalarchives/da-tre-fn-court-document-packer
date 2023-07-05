@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   ecr-deploy:
-    uses: nationalarchives/tre-github-actions/.github/workflows/docker-build-and-ecr-deploy.yml@0.0.5
+    uses: nationalarchives/da-tre-github-actions/.github/workflows/docker-build-and-ecr-deploy.yml@0.0.5
     with:
       docker_image_name: 'tre-judgment-packer'
       build_dir: 'tre-judgment-packer'
