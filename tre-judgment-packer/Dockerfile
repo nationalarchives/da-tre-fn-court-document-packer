@@ -1,8 +1,5 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-# Loading Variables from Github Actions environment
-ARG PIP_INDEX_URL
-
 # Copy function code
 COPY "tre_judgment_packer.py" ${LAMBDA_TASK_ROOT}
 
