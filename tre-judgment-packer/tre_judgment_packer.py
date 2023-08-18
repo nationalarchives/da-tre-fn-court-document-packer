@@ -92,6 +92,7 @@ def handler(event, context):
             s3_bucket_in=s3_source_bucket,
             s3_object_names=files_to_zip,
             tar_gz_object=s3_file_path_with_file_name,
+            tar_internal_prefix=reference,
             s3_bucket_out=OUT_BUCKET,
         )
 
