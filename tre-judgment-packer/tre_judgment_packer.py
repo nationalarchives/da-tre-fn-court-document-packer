@@ -98,7 +98,7 @@ def handler(event, context):
 
         event_output_success = {
             "properties": {
-                "messageType": "uk.gov.nationalarchives.tre.messages.courtdocumentpackage.available.CourtDocumentPackageAvailable",
+                "messageType": "uk.gov.nationalarchives.da.messages.courtdocumentpackage.available.CourtDocumentPackageAvailable",
                 "timestamp": timestamp,
                 "function": PROCESS,
                 "producer": PRODUCER,
