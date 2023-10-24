@@ -75,10 +75,12 @@ def handler(event, context):
             bucket_name=s3_source_bucket, object_filter=f"{parsed_judgment_file_path}"
         )
 
+        tre_internal_reference = f"TRE-{reference}"
+
         # construct file path
         s3_key_file_path = f"{reference}/{execution_id}/"
         # create a name for the package based on reference
-        packed_judgment_file_name = f"{reference}.tar.gz"
+        packed_judgment_file_name = f"{tre_internal_reference}.tar.gz"
         # s3 object key with name
         s3_file_path_with_file_name = f"{s3_key_file_path}{packed_judgment_file_name}"
 
@@ -92,7 +94,7 @@ def handler(event, context):
             s3_bucket_in=s3_source_bucket,
             s3_object_names=files_to_zip,
             tar_gz_object=s3_file_path_with_file_name,
-            tar_internal_prefix=f"{reference}/",
+            tar_internal_prefix=f"{tre_internal_reference}/",
             s3_bucket_out=OUT_BUCKET,
         )
 
