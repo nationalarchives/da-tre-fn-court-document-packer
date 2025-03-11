@@ -12,5 +12,6 @@ RUN dnf upgrade
 RUN dnf clean all --enablerepo=\*
 RUN pip3 install --requirement requirements.txt --target "${LAMBDA_TASK_ROOT}"
 
+RUN pip install --no-cache-dir legacy-cgi==2.6.2
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 CMD [ "tre_judgment_packer.handler" ]
