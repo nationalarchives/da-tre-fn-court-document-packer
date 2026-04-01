@@ -1,4 +1,4 @@
-requests~=2.32.5
+requests~=2.33.1
 jsonschema~=4.26.0
 boto3~=1.42.80
 s3-lib~=0.0.3
