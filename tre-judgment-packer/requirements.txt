@@ -2,4 +2,4 @@ requests~=2.33.1
 jsonschema~=4.26.0
 boto3~=1.42.80
 s3-lib~=0.0.3
-zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
+zipp>=3.23.1 # not directly required, pinned by Snyk to avoid a vulnerability
