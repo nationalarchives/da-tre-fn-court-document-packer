@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.13.2026.02.27.17@sha256:41d4b67b93fb7112da8089ddeb1f9d7f0aff879dcb1c56cbb946196ba92ed8fa
+FROM public.ecr.aws/lambda/python:3.13.2026.05.20.18@sha256:c1c48889a63cda891a315702c08bb197d0dad4581a0f5c2e66c4f264b0662dc1
 
 # Loading Variables from Github Actions environment
 ARG PIP_INDEX_URL
