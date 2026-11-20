@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 FROM public.ecr.aws/lambda/python:3.15.2026.11.19.13@sha256:daedfd8cfccf4cf3e64b2f1b650f50f5bcf5500b4cc3fe355030575d3f41672c
-=======
-FROM public.ecr.aws/lambda/python:3.14.2026.11.19.13-x86_64@sha256:98477693a99ed67b0176b20428d9400506465ace75856020a1e94241c014d3e4
->>>>>>> Stashed changes
 
 # Loading Variables from Github Actions environment
 ARG PIP_INDEX_URL
