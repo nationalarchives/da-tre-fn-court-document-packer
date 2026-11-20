@@ -1,4 +1,6 @@
-FROM public.ecr.aws/lambda/python:3.14.2026.09.14.16@sha256:ba6b4ce9b75532265d9c55ecf3f637f736eac4f23f060c767e6488dc1e47b3a9
+FROM public.ecr.aws/lambda/python:3.15.2026.11.19.13@sha256:daedfd8cfccf4cf3e64b2f1b650f50f5bcf5500b4cc3fe355030575d3f41672c
+
+RUN dnf update -y rpm --releasever=2023.12.20261112 && dnf clean all
 
 # Loading Variables from Github Actions environment
 ARG PIP_INDEX_URL
